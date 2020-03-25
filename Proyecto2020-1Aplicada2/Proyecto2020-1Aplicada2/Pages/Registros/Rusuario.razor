@@ -1,0 +1,129 @@
+﻿@page "/Registrar/Usuario"
+@page "/Registro/{Id:int}"
+
+    <div class="form-register">
+        <h3>Registro</h3>
+        <EditForm Model="@usuario" OnValidSubmit="Guardar">
+            <DataAnnotationsValidator />
+            <label class="text-muted form-text">@mensaje</label>
+            <div class="form-group">
+                <label> UsuarioId</label>
+                <InputNumber class="form-control" @bind-Value="usuario.UsuarioId"></InputNumber>
+                <ValidationMessage For="(() => usuario.UsuarioId)" />
+                <button type="button" class="btn btn-primary" @onclick="Buscar">Buscar</button>
+            </div>
+
+            <div class="form-group">
+                <label>Nombre</label>
+                <InputText class="form-control" @bind-Value="usuario.Nombre"></InputText>
+                <ValidationMessage For="(() => usuario.Nombre)" />
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="usuario.Usuarios"></InputText>
+                <ValidationMessage For="(() => usuario.Usuarios)" />
+            </div>
+
+            <div class="form-group">
+                <label>Clave</label>
+                <InputText type="password" class="form-control" @bind-Value="usuario.Contraseña"></InputText>
+                <ValidationMessage For="(() => usuario.Contraseña)" />
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar Clave</label>
+                <InputText class="form-control" @bind-Value="usuario.RepeatContraseña" type="password"></InputText>
+                <ValidationMessage For="(() => usuario.RepeatContraseña)" />
+            </div>
+
+            
+
+            <div class="form-group">
+                <label>Fecha de Ingreso</label>
+                <InputDate class="form-control" @bind-Value="usuario.Fecha"></InputDate>
+                <ValidationMessage For="(() => usuario.Fecha)" />
+            </div>
+
+            <div>
+                <button type="button" class="btn btn-danger" @onclick="Limpiar">Nuevo</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" @onclick="Eliminar">Eliminar</button>
+            </div>
+            <h5 class="text-success">@mensaje</h5>
+
+        </EditForm>
+
+    </div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public string mensaje = "";
+    Usuario usuario =new Usuario();
+    UsuarioController controller = new UsuarioController();
+
+    protected override void OnInitialized()
+    {
+        Limpiar();
+        mensaje = string.Empty;
+        if (Id != 0)
+        {
+            usuario = controller.Buscar(Id);
+        }
+
+    }
+    private void Limpiar()
+    {
+        usuario = new Usuario();
+    }
+
+    public void Guardar()
+    {
+        if (controller.Guardar(usuario))
+        {
+            Limpiar();
+            mensaje = "Guardado con exito";
+        }
+        else
+        {
+            Limpiar();
+            mensaje = "Error!!!";
+        }
+    }
+
+    public void Buscar()
+    {
+        var usuarios = controller.Buscar(usuario.UsuarioId);
+
+        if (usuario!= null)
+
+        {
+            usuario = usuarios;
+        }
+        else
+        {
+            Limpiar();
+            mensaje = "No existe";
+        }
+    }
+
+    public void Eliminar()
+    {
+        var usuarios = controller.Buscar(usuario.UsuarioId);
+        if (usuarios != null)
+
+        {
+            controller.Eliminar(usuario.UsuarioId);
+            Limpiar();
+            mensaje = "Eliminado  con  exito";
+        }
+        else
+        {
+            Limpiar();
+            mensaje = " Error ";
+        }
+
+    }
+
+}

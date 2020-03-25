@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Proyecto_2020_1.Models
+namespace Proyecto2020_1Aplicada2.Models
 {
     public class Granja
     {
@@ -13,5 +13,12 @@ namespace Proyecto_2020_1.Models
         public string Raza { get; set; }
         public int Corral { get; set; }
 
+        public Granja()
+        {
+            MadreId = 0;
+            Raza = string.Empty;
+            Corral = 0;
+        }
     }
 }
+
